@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CoralTravelAnalyzer.CoralTravelApi.Proto.PriceSearch
+namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelOptions
 {
-    public class PriceSearchResult
+    public class HotelOptionsResult
     {
         public string Id { get; set; }
         public bool Success { get; set; }
         public string ErrorMessage { get; set; }
-        public ResultPrice Result { get; set; }
+        public ResultOptions Result { get; set; }
         public int ElapsedMilliseconds { get; set; }
 }
 }

@@ -1,8 +1,8 @@
-﻿using CoralTravelAnalyzer.CoralTravelApi.Proto.PriceSearch;
+﻿using CoralTravelAnalyzer.CoralTravelApi.Proto.HotelOptions;
 
 namespace CoralTravelAnalyzer.CoralTravelApi
 {
-    public class PriceSearch : ApiBase<PriceSearchResult>
+    public class OptionsSearch : ApiBase<HotelOptionsResult>
     {
         private string _baseUrl =
                 "CoralTravel/HotelOptions/HotelOptionsList?sortAscending=true&sortBy=undefined&pageSize={12}&" +
@@ -32,7 +32,7 @@ namespace CoralTravelAnalyzer.CoralTravelApi
             if (parameters == null) return;
             _hotelEeId = parameters[0]; // hotel search lookup result
             _countryEeId = parameters[1]; // hotel search lookup result
-            _areaFromEeId = parameters[2]; // hotel search lookup result
+            _areaFromEeId = parameters[2]; // 2671 - Moscow
             _startDate = parameters[3]; // user input
             _adults = parameters[4]; //user input, default 2
             _children = parameters[5]; //user input, can be 0

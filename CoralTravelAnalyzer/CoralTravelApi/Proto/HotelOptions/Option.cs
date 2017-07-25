@@ -1,4 +1,4 @@
-﻿namespace CoralTravelAnalyzer.CoralTravelApi.Proto.PriceSearch
+﻿namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelOptions
 {
     public class Option
     {

@@ -74,17 +74,21 @@
     </Compile>
     <Compile Include="Classes\HotelEntry.cs" />
     <Compile Include="CoralTravelApi\ApiBase.cs" />
-    <Compile Include="CoralTravelApi\PriceSearch.cs" />
+    <Compile Include="CoralTravelApi\OptionsSearch.cs" />
     <Compile Include="CoralTravelApi\HotelSearch.cs" />
     <Compile Include="CoralTravelApi\IWebRequestApi.cs" />
     <Compile Include="CoralTravelApi\Proto\HotelSearch\HotelEntry.cs" />
     <Compile Include="CoralTravelApi\Proto\HotelSearch\ResultHotels.cs" />
     <Compile Include="CoralTravelApi\Proto\HotelSearch\HotelSearchResult.cs" />
-    <Compile Include="CoralTravelApi\Proto\PriceSearch\HotelPrice.cs" />
-    <Compile Include="CoralTravelApi\Proto\PriceSearch\Option.cs" />
-    <Compile Include="CoralTravelApi\Proto\PriceSearch\PriceSearchResult.cs" />
-    <Compile Include="CoralTravelApi\Proto\PriceSearch\ResultPrice.cs" />
-    <Compile Include="CoralTravelApi\Proto\PriceSearch\Room.cs" />
+    <Compile Include="CoralTravelApi\Proto\HotelOptions\HotelOptions.cs" />
+    <Compile Include="CoralTravelApi\Proto\HotelOptions\Option.cs" />
+    <Compile Include="CoralTravelApi\Proto\HotelOptions\HotelOptionsResult.cs" />
+    <Compile Include="CoralTravelApi\Proto\HotelOptions\ResultOptions.cs" />
+    <Compile Include="CoralTravelApi\Proto\HotelOptions\Room.cs" />
+    <Compile Include="CoralTravelApi\Proto\PriceSearch\DayPrice.cs" />
+    <Compile Include="CoralTravelApi\Proto\PriceSearch\HotelPriceResult.cs" />
+    <Compile Include="CoralTravelApi\Proto\PriceSearch\PriceResult.cs" />
+    <Compile Include="CoralTravelApi\Proto\PriceSearch\PriceVariants.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -131,5 +135,6 @@
       <Name>TiQWpfUtils</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

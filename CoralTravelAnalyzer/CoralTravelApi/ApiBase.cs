@@ -26,7 +26,7 @@ namespace CoralTravelAnalyzer.CoralTravelApi
             _client = new HttpClient {BaseAddress = _baseUri};
         }
 
-        public void AskStop()
+        private void AskStop()
         {
             if (_requestInRun)
             {

@@ -15,7 +15,7 @@ namespace CoralTravelAnalyzer
         private ObservableCollection<HotelEntry> SearchResult { get; }
 
         private readonly HotelSearch _hotelSearchApi = new HotelSearch();
-        private readonly HotelSearch _priceSearchApi = new HotelSearch();
+        private readonly OptionsSearch _optionsApi = new OptionsSearch();
 
         public MainWindow()
         {

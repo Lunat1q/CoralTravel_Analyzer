@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Documents;
 
-namespace CoralTravelAnalyzer.CoralTravelApi.Proto.PriceSearch
+namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelOptions
 {
-    public class ResultPrice
+    public class ResultOptions
     {
         public string Id { get; set; }
-        public List<HotelPrice> List { get; set; }
+        public List<HotelOptions> List { get; set; }
         public double MinPrice { get; set; }
         public string Date { get; set; }
         public bool HasOtherResults { get; set; }
