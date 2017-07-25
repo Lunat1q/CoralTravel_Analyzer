@@ -1,14 +1,14 @@
-﻿using CoralTravelAnalyzer.CoralTravelApi.Proto.HotelOptions;
+﻿using CoralTravelAnalyzer.CoralTravelApi.Proto.HotelPriceOptions;
 
 namespace CoralTravelAnalyzer.CoralTravelApi
 {
-    public class OptionsSearch : ApiBase<HotelOptionsResult>
+    public class PriceOptionsSearch : ApiBase<HotelOptionsResult>
     {
         private string _baseUrl =
                 "CoralTravel/HotelOptions/HotelOptionsList?sortAscending=true&sortBy=undefined&pageSize={12}&" +
                 "currentPage={13}&pageCount={14}&search=&hotelEeId={0}&countryEeId={1}&areaFromEeId={2}&startDate={3}&" +
                 "endDate=undefined&adults={4}&children={5}&childAge1=0&childAge2=0&childAge3=0&nightsFrom={6}&" +
-                "nightsTo={7}&nights={8}&minPrice=0&maxPrice={9}&searchType=Tour&showDiscount={10}&infiniteMaxPrice={11}" +
+                "nightsTo={7}&nights={8}&minPrice=0&maxPrice={9}&searchType={15}&showDiscount={10}&infiniteMaxPrice={11}" +
                 "&saveFilter=true&otherResults=true&allotmentStatus=undefined";
 
         private string _hotelEeId;
@@ -26,7 +26,29 @@ namespace CoralTravelAnalyzer.CoralTravelApi
         private string _infiniteMaxPrice;
         private string _pageSize;
         private string _currentPage;
+        private string _searchType;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="parameters">
+        /// hotelEeId,
+        /// countryEeId,
+        /// areaFromEeId -  2671 - Moscow,
+        /// startDate,
+        /// adults,
+        /// children,
+        /// nightsFrom,
+        /// nightsTo,
+        /// nights,
+        /// maxPrice,
+        /// showDicount - default false ????,
+        /// infiniteMaxPrice - default true,
+        /// pageSize - default 20,
+        /// currentPage - default 1,
+        /// pageCount - default 1,
+        /// searchType - Tour or Hotel
+        /// </param>
         public override void SetRequestParameters(params string[] parameters)
         {
             if (parameters == null) return;
@@ -45,13 +67,14 @@ namespace CoralTravelAnalyzer.CoralTravelApi
             _pageSize = parameters[12]; //default 20
             _currentPage = parameters[13]; //default 1
             _pageCount = parameters[14]; //default 1
+            _searchType = parameters[15]; // Hotel - Tour
         }
 
         protected override string GetRequestUrl()
         {
             return string.Format(_baseUrl, _hotelEeId, _countryEeId, _areaFromEeId, _startDate, _adults, _children,
                 _nightsFrom, _nightsTo, _nights, _maxPrice, _showDicount, _infiniteMaxPrice, _pageSize,
-                _currentPage, _pageCount);
+                _currentPage, _pageCount, _searchType);
         }
     }
 }

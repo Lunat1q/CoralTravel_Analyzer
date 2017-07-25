@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Documents;
+﻿using System.Collections.Generic;
 
-namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelOptions
+namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelPriceOptions
 {
     public class ResultOptions
     {
@@ -23,5 +18,7 @@ namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelOptions
         public List<int> MealEeIds { get; set; }
         public List<int> HotelEeIds { get; set; }
         public List<int> AllotmentStatus { get; set; }
-}
+
+        public bool Empty => List.Count == 0;
+    }
 }

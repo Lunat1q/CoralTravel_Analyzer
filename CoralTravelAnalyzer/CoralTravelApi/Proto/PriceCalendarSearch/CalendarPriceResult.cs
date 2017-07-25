@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoralTravelAnalyzer.CoralTravelApi.Proto.PriceSearch
+﻿namespace CoralTravelAnalyzer.CoralTravelApi.Proto.PriceCalendarSearch
 {
-    public class HotelPriceResult
+    public class CalendarPriceResult
     {
         public string Id { get; set; }
         public bool Success { get; set; }

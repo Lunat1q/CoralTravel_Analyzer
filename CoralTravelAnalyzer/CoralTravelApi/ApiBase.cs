@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -17,13 +18,17 @@ namespace CoralTravelAnalyzer.CoralTravelApi
         private readonly Uri _baseUri = new Uri(BaseUrl);
 
         private readonly HttpClient _client;
+        private readonly HttpClientHandler _handler;
 
         private bool _requestInRun;
         private CancellationTokenSource _cts;
 
         protected ApiBase()
         {
-            _client = new HttpClient {BaseAddress = _baseUri};
+            var cookieContainer = new CookieContainer();
+            _handler = new HttpClientHandler {CookieContainer = cookieContainer};
+            _client = new HttpClient(_handler) {BaseAddress = _baseUri};
+            cookieContainer.Add(_baseUri, new Cookie("ClientInfo", "did=14398"));
         }
 
         private void AskStop()
@@ -35,7 +40,7 @@ namespace CoralTravelAnalyzer.CoralTravelApi
             _cts = new CancellationTokenSource();
         }
 
-        public async Task<T> GetDataAsString()
+        public async Task<T> GetDataAsync(bool instant = false)
         {
             var result = default(T);
 
@@ -45,7 +50,8 @@ namespace CoralTravelAnalyzer.CoralTravelApi
             _requestInRun = true;
             try
             {
-                await Task.Delay(3000);
+                if (!instant)
+                    await Task.Delay(3000);
                 var resultMsg = await _client.GetAsync(GetRequestUrl(), _cts.Token);
                 var resultContent = await resultMsg.Content.ReadAsStringAsync();
                 result = Json.DeserializeDataFromString<T>(resultContent);
@@ -70,6 +76,7 @@ namespace CoralTravelAnalyzer.CoralTravelApi
         public void Dispose()
         {
             _client?.Dispose();
+            
         }
 
         public abstract void SetRequestParameters(params string[] parameters);

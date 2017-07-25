@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelOptions
+namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelPriceOptions
 {
     public class Room
     {
@@ -14,6 +10,6 @@ namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelOptions
         public bool Opened { get; set; }
         public string ImageUrl { get; set; }
         public object ImageCaption { get; set; }
-        public List<Option> Options { get; set; }
+        public List<PriceOption> Options { get; set; }
 }
 }

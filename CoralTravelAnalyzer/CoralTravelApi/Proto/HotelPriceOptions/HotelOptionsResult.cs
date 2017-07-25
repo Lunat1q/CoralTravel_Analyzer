@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelOptions
+﻿namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelPriceOptions
 {
     public class HotelOptionsResult
     {

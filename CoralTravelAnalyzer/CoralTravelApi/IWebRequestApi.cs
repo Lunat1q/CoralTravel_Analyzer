@@ -8,7 +8,7 @@ namespace CoralTravelAnalyzer.CoralTravelApi
 {
     interface IWebRequestApi<T>
     {
-        Task<T> GetDataAsString();
+        Task<T> GetDataAsync(bool instant);
 
         void SetRequestParameters(params string[] parameters);
     }

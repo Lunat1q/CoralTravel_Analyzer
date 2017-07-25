@@ -1,6 +1,6 @@
-﻿namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelOptions
+﻿namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelPriceOptions
 {
-    public class Option
+    public class PriceOption
     {
         public string Id { get; set; }
         public string Name { get; set; }
