@@ -2,7 +2,7 @@
 
 namespace CoralTravelAnalyzer.CoralTravelApi.Proto.HotelSearch
 {
-    public class Result
+    public class ResultHotels
     {
         public string Id { get; set; }
         public List<HotelSearchEntry> List { get; set; }

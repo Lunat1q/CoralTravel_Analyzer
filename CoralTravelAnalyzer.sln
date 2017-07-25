@@ -5,9 +5,9 @@ VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoralTravelAnalyzer", "CoralTravelAnalyzer\CoralTravelAnalyzer.csproj", "{531D1BF9-251A-45F4-9368-4BA64FAC7C90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiqUtils", "..\TiqUtils\TiqUtils\TiqUtils.csproj", "{ADD36AFD-5E81-40E7-93F8-381CF03C5FD2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiqUtils", "TiqUtils\TiqUtils\TiqUtils.csproj", "{ADD36AFD-5E81-40E7-93F8-381CF03C5FD2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiQWpfUtils", "..\TiQWpfUtils\TiQWpfUtils\TiQWpfUtils.csproj", "{B03903AE-CB73-4DAB-91D8-439F4AAD4806}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TiQWpfUtils", "TiQWpfUtils\TiQWpfUtils\TiQWpfUtils.csproj", "{B03903AE-CB73-4DAB-91D8-439F4AAD4806}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

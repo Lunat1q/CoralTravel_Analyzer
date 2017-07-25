@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 using CoralTravelAnalyzer.Classes;
 using CoralTravelAnalyzer.CoralTravelApi;
@@ -17,7 +14,8 @@ namespace CoralTravelAnalyzer
     {
         private ObservableCollection<HotelEntry> SearchResult { get; }
 
-        private readonly HotelSearch _hoteSearchApi = new HotelSearch();
+        private readonly HotelSearch _hotelSearchApi = new HotelSearch();
+        private readonly HotelSearch _priceSearchApi = new HotelSearch();
 
         public MainWindow()
         {
@@ -29,8 +27,8 @@ namespace CoralTravelAnalyzer
         private async void UpdateHotelSearchResult(string input)
         {
             var hotelName = input;
-            _hoteSearchApi.SetRequestParameters(hotelName);
-            var result = await _hoteSearchApi.GetDataAsString();
+            _hotelSearchApi.SetRequestParameters(hotelName);
+            var result = await _hotelSearchApi.GetDataAsString();
             if (result == null) return;
             SearchResult.Clear();
             foreach (var hotel in result.Result.List.Where(x => x.HotelId > 0))
