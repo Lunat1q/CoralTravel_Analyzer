@@ -49,10 +49,6 @@ namespace CoralTravelAnalyzer
 
         private bool FilterPriceResults(object o)
         {
-            if (_selectedRoomType == string.Empty && _selectedMealType == string.Empty)
-            {
-                return true;
-            }
             var option = o as HotelOptionEntry;
             if (option == null) return true;
             
