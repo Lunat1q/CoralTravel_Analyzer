@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TiqUtils.Serialize;
@@ -18,7 +15,6 @@ namespace CoralTravelAnalyzer.CoralTravelApi
         private readonly Uri _baseUri = new Uri(BaseUrl);
 
         private readonly HttpClient _client;
-        private readonly HttpClientHandler _handler;
 
         private bool _requestInRun;
         private CancellationTokenSource _cts;
@@ -26,8 +22,8 @@ namespace CoralTravelAnalyzer.CoralTravelApi
         protected ApiBase()
         {
             var cookieContainer = new CookieContainer();
-            _handler = new HttpClientHandler {CookieContainer = cookieContainer};
-            _client = new HttpClient(_handler) {BaseAddress = _baseUri};
+            var handler = new HttpClientHandler {CookieContainer = cookieContainer};
+            _client = new HttpClient(handler) {BaseAddress = _baseUri};
             cookieContainer.Add(_baseUri, new Cookie("ClientInfo", "did=14398"));
         }
 
@@ -51,7 +47,7 @@ namespace CoralTravelAnalyzer.CoralTravelApi
             try
             {
                 if (!instant)
-                    await Task.Delay(3000);
+                    await Task.Delay(5000);
                 var resultMsg = await _client.GetAsync(GetRequestUrl(), _cts.Token);
                 var resultContent = await resultMsg.Content.ReadAsStringAsync();
                 result = Json.DeserializeDataFromString<T>(resultContent);

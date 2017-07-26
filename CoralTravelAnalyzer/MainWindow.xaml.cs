@@ -5,14 +5,14 @@ using System.Linq;
 using System.Windows.Controls;
 using CoralTravelAnalyzer.Classes;
 using CoralTravelAnalyzer.CoralTravelApi;
-using MahApps.Metro.Controls;
+using CoralTravelAnalyzer.Ext;
 
 namespace CoralTravelAnalyzer
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow
     {
         private ObservableCollection<HotelEntry> SearchResult { get; }
         private ObservableCollection<HotelOptionEntry> OptionsResult { get; }
@@ -20,6 +20,12 @@ namespace CoralTravelAnalyzer
         private readonly HotelSearch _hotelSearchApi = new HotelSearch();
         private readonly PriceOptionsSearch _priceOptionsApi = new PriceOptionsSearch();
         private readonly ListFilter _listFilter = new ListFilter();
+
+        //filter vars
+        private string _selectedMealType = string.Empty;
+        private string _selectedRoomType = string.Empty;
+        private double _selectedMaxPrice;
+        private bool _onlyWithFlight;
 
         public MainWindow()
         {
@@ -30,6 +36,15 @@ namespace CoralTravelAnalyzer
             ResultList.ItemsSource = OptionsResult;
             _listFilter.Filter = FilterPriceResults;
             ResultList.Items.Filter = _listFilter.Filter;
+            InDate.SelectedDate = DateTime.Now;
+
+            InitWaitImage();
+        }
+
+        private void InitWaitImage()
+        {
+            WaitImage.Source = Properties.Resources.island2.LoadBitmap();
+            WaitImage.ImageWidth = WaitImage.ImageHeight = 300;
         }
 
         private bool FilterPriceResults(object o)
@@ -40,30 +55,26 @@ namespace CoralTravelAnalyzer
             }
             var option = o as HotelOptionEntry;
             if (option == null) return true;
-            if (_selectedRoomType != string.Empty && _selectedMealType == string.Empty)
-            {
-                return option.RoomType.IndexOf(_selectedRoomType, StringComparison.OrdinalIgnoreCase) > -1;
-            }
-            if (_selectedRoomType == string.Empty && _selectedMealType != string.Empty)
-            {
-                return option.MealType.IndexOf(_selectedMealType, StringComparison.OrdinalIgnoreCase) > -1;
-            }
-            if (_selectedRoomType != string.Empty && _selectedMealType != string.Empty)
-            {
-                return option.MealType.IndexOf(_selectedMealType, StringComparison.OrdinalIgnoreCase) > -1
-                       && option.RoomType.IndexOf(_selectedRoomType, StringComparison.OrdinalIgnoreCase) > -1;
-            }
-            return true;
+            
+            var match = string.IsNullOrWhiteSpace(_selectedRoomType) || option.RoomType.IndexOf(_selectedRoomType, StringComparison.OrdinalIgnoreCase) > -1;
+
+            match &= string.IsNullOrWhiteSpace(_selectedMealType) || option.MealType.IndexOf(_selectedMealType, StringComparison.OrdinalIgnoreCase) > -1;
+
+            match &= _selectedMaxPrice <= 0 || option.TotalPrice <= _selectedMaxPrice;
+
+            match &= !_onlyWithFlight || !option.NoFlight;
+
+            return match;
         }
 
-        private async void UpdateHotelSearchResult(string input)
+        private async void UpdateHotelSearchResult(string input, bool forceInstant = false)
         {
-            var hotelName = input;
-            _hotelSearchApi.SetRequestParameters(hotelName);
-            var result = await _hotelSearchApi.GetDataAsync();
+            if (string.IsNullOrWhiteSpace(input)) return;
+            _hotelSearchApi.SetRequestParameters(input);
+            var result = await _hotelSearchApi.GetDataAsync(forceInstant);
             if (result == null) return;
             SearchResult.Clear();
-            foreach (var hotel in result.Result.List.Where(x => x.HotelId > 0))
+            foreach (var hotel in result.Result.List.Where(x => x.HotelId > 0).Take(10))
             {
                 SearchResult.Add(HotelEntry.InitFromSearch(hotel));
             }
@@ -74,7 +85,8 @@ namespace CoralTravelAnalyzer
         {
             OptionsResult.Clear();
             ResetFilterBoxes();
-            for (int i = 0; i < shift; i++)
+            WaitImage.ShowAndRotate();
+            for (var i = 0; i < shift; i++)
             {
                 _priceOptionsApi.SetRequestParameters(hotelEntry.HotelEeId.ToString(), hotelEntry.CountryEeId.ToString(),
                     areaId, startDate.AddDays(i).ToString("yyyy-MM-dd"), adults, "0", nightsFrom, nightsTo, nightsFrom, "500000", "false", "true", "20", "1",
@@ -86,7 +98,7 @@ namespace CoralTravelAnalyzer
                     _priceOptionsApi.SetRequestParameters(hotelEntry.HotelEeId.ToString(), hotelEntry.CountryEeId.ToString(),
                         areaId, startDate.AddDays(i).ToString("yyyy-MM-dd"), adults, "0", nightsFrom, nightsTo, nightsFrom, "500000", "false", "true", "20", "1",
                         "1", "Hotel");
-                    result = await _priceOptionsApi.GetDataAsync(i > 0);
+                    result = await _priceOptionsApi.GetDataAsync(true);
                     noFlight = true;
                 }
                 var parsedResult = HotelOptionEntry.GenerateFromResultOptions(result?.Result, noFlight);
@@ -98,6 +110,7 @@ namespace CoralTravelAnalyzer
             }
             ResultList.Items.SortDescriptions.Add(new SortDescription("PricePerDay", ListSortDirection.Ascending));
             BuildFilterBoxes();
+            WaitImage.Hide();
         }
 
         private void ResetFilterBoxes()
@@ -106,6 +119,9 @@ namespace CoralTravelAnalyzer
             RoomTypeFilterBox.SelectedIndex = -1;
             RoomTypeFilterBox.Items.Clear();
             MealTypeFilterBox.Items.Clear();
+            MaxTourPrice.Text = "";
+            _selectedMaxPrice = 0;
+            OnlyWithFlight.IsChecked = _onlyWithFlight = false;
             _selectedMealType = _selectedRoomType = string.Empty;
         }
 
@@ -157,12 +173,15 @@ namespace CoralTravelAnalyzer
             if (hotelEntry == null) return;
 
             int.TryParse(ShiftBox.Text, out int shift);
-            if (shift == 0) shift = 1;
-            RequstPrice(hotelEntry, "2671", InDate.DisplayDate, shift, daysRange.Item1, daysRange.Item2, "2");
+            if (shift < 0) shift = 0;
+            shift++;
+            var selectedDate = DateTime.Now;
+            if (InDate.SelectedDate != null)
+            {
+                selectedDate = (DateTime) InDate.SelectedDate;
+            }
+            RequstPrice(hotelEntry, "2671", selectedDate, shift, daysRange.Item1, daysRange.Item2, "2");
         }
-
-        private string _selectedMealType = string.Empty;
-        private string _selectedRoomType = string.Empty;
 
         private void MealTypeFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -189,6 +208,31 @@ namespace CoralTravelAnalyzer
         private void ReapplyFilter()
         {
             ResultList.Items.Filter = _listFilter.Filter;
+        }
+
+        private void HotelBox_DropDownOpened(object sender, EventArgs e)
+        {
+            var cb = sender as ComboBox;
+            if (cb == null) return;
+            UpdateHotelSearchResult(cb.Text, true);
+        }
+
+        private void MaxTrourPrice_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var tb = sender as TextBox;
+            if (tb == null) return;
+            if (!double.TryParse(tb.Text, out _selectedMaxPrice))
+                _selectedMaxPrice = 0;
+            ReapplyFilter();
+        }
+
+        private void OnlyWithFlight_Checked(object sender, System.Windows.RoutedEventArgs e)
+        {
+            var cb = sender as CheckBox;
+            if (cb == null) return;
+            if (cb.IsChecked != null)
+                _onlyWithFlight = (bool)cb.IsChecked;
+            ReapplyFilter();
         }
     }
 }
