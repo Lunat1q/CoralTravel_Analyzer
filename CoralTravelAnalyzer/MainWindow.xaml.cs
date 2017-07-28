@@ -87,14 +87,14 @@ namespace CoralTravelAnalyzer
                 _priceOptionsApi.SetRequestParameters(hotelEntry.HotelEeId.ToString(), hotelEntry.CountryEeId.ToString(),
                     areaId, startDate.AddDays(i).ToString("yyyy-MM-dd"), adults, "0", nightsFrom, nightsTo, nightsFrom, "500000", "false", "true", "20", "1",
                         "1", "Tour");
-                var result = await _priceOptionsApi.GetDataAsync(i > 0);
+                var result = await _priceOptionsApi.GetDataAsync(false, 10);
                 var noFlight = false;
                 if (result == null || result.Result.Empty)
                 {
                     _priceOptionsApi.SetRequestParameters(hotelEntry.HotelEeId.ToString(), hotelEntry.CountryEeId.ToString(),
                         areaId, startDate.AddDays(i).ToString("yyyy-MM-dd"), adults, "0", nightsFrom, nightsTo, nightsFrom, "500000", "false", "true", "20", "1",
                         "1", "Hotel");
-                    result = await _priceOptionsApi.GetDataAsync(true);
+                    result = await _priceOptionsApi.GetDataAsync(false, 10);
                     noFlight = true;
                 }
                 var parsedResult = HotelOptionEntry.GenerateFromResultOptions(result?.Result, noFlight);

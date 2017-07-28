@@ -10,16 +10,15 @@ namespace CoralTravelAnalyzer.Classes
     {
         public string RoomType { get; set; }
         public string RoomImageUrl { get; set; }
-        public string MealType { get; set; }
+        public string MealType => _baseEntry.Name;
         public string BeginDateString => BeginDate.ToString("dd.MM.yyyy");
         private DateTime BeginDate { get; set; }
-        public int DaysTotal { get; set; }
-        public double TotalPrice { get; set; }
+        public int DaysTotal => _baseEntry.Nights;
+        public double TotalPrice => _baseEntry.Price;
         public bool NoFlight { get; set; }
         public double PricePerDay => TotalPrice / DaysTotal;
 
         private PriceOption _baseEntry;
-
 
         public static List<HotelOptionEntry> GenerateFromResultOptions(ResultOptions resultOptions, bool noFlight = false)
         {
@@ -39,9 +38,6 @@ namespace CoralTravelAnalyzer.Classes
                                 BeginDate = DateTime.Parse(option.BeginDate),
                                 RoomType = room.Name,
                                 RoomImageUrl = room.ImageUrl,
-                                MealType = option.Name,
-                                TotalPrice = option.Price,
-                                DaysTotal = hotelOption.Nights,
                                 NoFlight = noFlight
                             };
                             resultList.Add(item);

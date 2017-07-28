@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace CoralTravelAnalyzer.CoralTravelApi
 {
     interface IWebRequestApi<T>
     {
-        Task<T> GetDataAsync(bool instant);
+        Task<T> GetDataAsync(bool instant, int delaySec);
 
         void SetRequestParameters(params string[] parameters);
     }

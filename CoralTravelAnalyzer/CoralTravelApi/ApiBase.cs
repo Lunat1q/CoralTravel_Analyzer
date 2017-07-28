@@ -36,7 +36,7 @@ namespace CoralTravelAnalyzer.CoralTravelApi
             _cts = new CancellationTokenSource();
         }
 
-        public async Task<T> GetDataAsync(bool instant = false)
+        public async Task<T> GetDataAsync(bool instant = false, int delaySec = 5)
         {
             var result = default(T);
 
@@ -47,7 +47,7 @@ namespace CoralTravelAnalyzer.CoralTravelApi
             try
             {
                 if (!instant)
-                    await Task.Delay(5000);
+                    await Task.Delay(delaySec * 1000);
                 var resultMsg = await _client.GetAsync(GetRequestUrl(), _cts.Token);
                 var resultContent = await resultMsg.Content.ReadAsStringAsync();
                 result = Json.DeserializeDataFromString<T>(resultContent);
