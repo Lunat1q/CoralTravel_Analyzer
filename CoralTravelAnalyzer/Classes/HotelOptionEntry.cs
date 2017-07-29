@@ -22,7 +22,7 @@ namespace CoralTravelAnalyzer.Classes
         public string MealType => _baseEntry?.Name.Trim() ?? "MealTypeUnknown";
 
         [ExcelData("Total Price", 150)]
-        public double TotalPrice => _baseEntry?.Price ?? 0;
+        public double TotalPrice => Math.Round(_baseEntry?.Price ?? 0, 2);
 
         [ExcelData("Usd Price", 150)]
         public double UsdPrice => Math.Round(_baseEntry?.LocalPrice ?? 0, 2);
