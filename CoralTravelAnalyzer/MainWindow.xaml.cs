@@ -8,7 +8,6 @@ using CoralTravelAnalyzer.CoralTravelApi;
 using CoralTravelAnalyzer.Ext;
 using CoralTravelAnalyzer.FileDestinations.Office;
 using Microsoft.Win32;
-using TiqUtils;
 using TiqUtils.Serialize;
 
 namespace CoralTravelAnalyzer
@@ -282,7 +281,7 @@ namespace CoralTravelAnalyzer
 
             if (dia.ShowDialog() != true) return;
 
-            OptionsResult.GenerateExcelDocument(sheetName, dia.FileName);
+            OptionsResult.OrderBy(x=>x.PricePerDay).GenerateExcelDocument(sheetName, dia.FileName);
         }
     }
 }
