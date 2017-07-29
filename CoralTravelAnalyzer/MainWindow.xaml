@@ -48,7 +48,7 @@
                 <Button x:Name="Start" Content="Start" Grid.Column="8" Margin="0" VerticalAlignment="Center" Height="28" Width="100" Click="Start_Click"/>
             </Grid>
             <ListBox x:Name="ResultList" Grid.Row="1" VerticalContentAlignment="Stretch" Margin="0,5,0,0" ItemTemplate="{DynamicResource ResultItemTemplate}"/>
-                <Grid Margin="5,5,5,0" Grid.Row="2">
+            <Grid Margin="5,5,5,0" Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="1*"/>
@@ -56,6 +56,7 @@
                     <ColumnDefinition Width="1*"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
                 <TextBlock HorizontalAlignment="Center" Margin="0,0,5,0" TextWrapping="Wrap" Text="Meal Type" VerticalAlignment="Center"/>
@@ -65,7 +66,8 @@
                 <TextBlock Grid.Column="4" HorizontalAlignment="Center" Margin="0,0,5,0" TextWrapping="Wrap" Text="Max Price" VerticalAlignment="Center"/>
                 <TextBox x:Name="MaxTourPrice" Grid.Column="5" Margin="0,0,5,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" VerticalAlignment="Center" TextChanged="MaxTrourPrice_TextChanged" />
                 <CheckBox  x:Name="OnlyWithFlight"  Grid.Column="6" Content="Only with Flight" Margin="0,0,5,0" HorizontalContentAlignment="Center" VerticalAlignment="Center" FlowDirection="RightToLeft" Checked="OnlyWithFlight_Checked" Unchecked="OnlyWithFlight_Checked" />
-                </Grid>
+                <Button Grid.Column="7"  Margin="0,0,5,0" Content="{Binding Converter={StaticResource LoadImageFromResource}, ConverterParameter='excel'}" VerticalAlignment="Center" Height="26" Width="26" Padding="0" HorizontalAlignment="Right" Click="ExcelButton_Click"/>
+            </Grid>
             <userControls:ImageSpinControl Visibility="Collapsed"  x:Name="WaitImage" Grid.Row="1" Grid.RowSpan="2"/>
         </Grid>
     </Grid>

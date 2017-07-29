@@ -6,6 +6,10 @@ using System.Windows.Controls;
 using CoralTravelAnalyzer.Classes;
 using CoralTravelAnalyzer.CoralTravelApi;
 using CoralTravelAnalyzer.Ext;
+using CoralTravelAnalyzer.FileDestinations.Office;
+using Microsoft.Win32;
+using TiqUtils;
+using TiqUtils.Serialize;
 
 namespace CoralTravelAnalyzer
 {
@@ -15,7 +19,7 @@ namespace CoralTravelAnalyzer
     public partial class MainWindow
     {
         private ObservableCollection<HotelEntry> SearchResult { get; }
-        private ObservableCollection<HotelOptionEntry> OptionsResult { get; }
+        private ObservableCollection<HotelOptionEntry> OptionsResult { get; set; }
 
         private readonly HotelSearch _hotelSearchApi = new HotelSearch();
         private readonly PriceOptionsSearch _priceOptionsApi = new PriceOptionsSearch();
@@ -32,13 +36,22 @@ namespace CoralTravelAnalyzer
             InitializeComponent();
             SearchResult = new ObservableCollection<HotelEntry>();
             OptionsResult = new ObservableCollection<HotelOptionEntry>();
+
+            DebugData();
+
             HotelBox.ItemsSource = SearchResult;
             ResultList.ItemsSource = OptionsResult;
             _listFilter.Filter = FilterPriceResults;
             ResultList.Items.Filter = _listFilter.Filter;
             InDate.SelectedDate = DateTime.Now;
-
             InitWaitImage();
+        }
+
+        private void DebugData()
+        {
+#if DEBUG
+            OptionsResult = Json.DeserializeDataFromFile<ObservableCollection<HotelOptionEntry>>("data.json");
+#endif
         }
 
         private void InitWaitImage()
@@ -76,12 +89,38 @@ namespace CoralTravelAnalyzer
             }
         }
 
+        private void LockUi()
+        {
+            HotelBox.IsEnabled =
+                InDate.IsEnabled =
+                    DaysBox.IsEnabled =
+                        ShiftBox.IsEnabled =
+                            Start.IsEnabled = false;
+
+            Start.Content = "Stop";
+
+            WaitImage.ShowAndRotate();
+        }
+
+        private void UnlockUi()
+        {
+            HotelBox.IsEnabled =
+                InDate.IsEnabled =
+                    DaysBox.IsEnabled =
+                        ShiftBox.IsEnabled =
+                            Start.IsEnabled = true;
+
+            Start.Content = "Start";
+
+            WaitImage.Hide();
+        }
+
         private async void RequstPrice(HotelEntry hotelEntry, string areaId, DateTime startDate, int shift, string nightsFrom, string nightsTo,
             string adults)
         {
             OptionsResult.Clear();
             ResetFilterBoxes();
-            WaitImage.ShowAndRotate();
+            LockUi();
             for (var i = 0; i < shift; i++)
             {
                 _priceOptionsApi.SetRequestParameters(hotelEntry.HotelEeId.ToString(), hotelEntry.CountryEeId.ToString(),
@@ -106,7 +145,7 @@ namespace CoralTravelAnalyzer
             }
             ResultList.Items.SortDescriptions.Add(new SortDescription("PricePerDay", ListSortDirection.Ascending));
             BuildFilterBoxes();
-            WaitImage.Hide();
+            UnlockUi();
         }
 
         private void ResetFilterBoxes()
@@ -182,23 +221,19 @@ namespace CoralTravelAnalyzer
         private void MealTypeFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var cb = sender as ComboBox;
-            if (cb != null)
-            {
-                var text = cb.SelectedItem as string;
-                _selectedMealType = text;
-                ReapplyFilter();
-            }
+            if (cb == null) return;
+            var text = cb.SelectedItem as string;
+            _selectedMealType = text;
+            ReapplyFilter();
         }
 
         private void RoomTypeFilterBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var cb = sender as ComboBox;
-            if (cb != null)
-            {
-                var text = cb.SelectedItem as string;
-                _selectedRoomType = text;
-                ReapplyFilter();
-            }
+            if (cb == null) return;
+            var text = cb.SelectedItem as string;
+            _selectedRoomType = text;
+            ReapplyFilter();
         }
 
         private void ReapplyFilter()
@@ -229,6 +264,25 @@ namespace CoralTravelAnalyzer
             if (cb.IsChecked != null)
                 _onlyWithFlight = (bool)cb.IsChecked;
             ReapplyFilter();
+        }
+
+        private void ExcelButton_Click(object sender, System.Windows.RoutedEventArgs e)
+        {
+            if (OptionsResult.Count == 0) return;
+            var hotelEntry = HotelBox.SelectedItem as HotelEntry;
+            if (hotelEntry == null) return;
+
+            var sheetName = $"{hotelEntry.HotelName}_{DateTime.Now:dd-MM-yyyy_HH_mm}";
+            var dia = new SaveFileDialog
+            {
+                RestoreDirectory = true,
+                Filter = @"Excel Worksheets (*.xlsx)|*.xlsx|xls file (*.xls)|*.xls|All files (*.*)|*.*",
+                FileName = sheetName
+            };
+
+            if (dia.ShowDialog() != true) return;
+
+            OptionsResult.GenerateExcelDocument(sheetName, dia.FileName);
         }
     }
 }

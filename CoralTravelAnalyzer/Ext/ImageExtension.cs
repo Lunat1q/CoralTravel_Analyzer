@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media.Imaging;
 
 namespace CoralTravelAnalyzer.Ext
@@ -27,6 +28,14 @@ namespace CoralTravelAnalyzer.Ext
             }
 
             return bs;
+        }
+
+        public static System.Windows.Controls.Image ToImage(this Bitmap source, string toolTipText = "no_text")
+        {
+            var img = new System.Windows.Controls.Image { Source = source.LoadBitmap() };
+            var tt = new ToolTip { Content = toolTipText };
+            img.ToolTip = tt;
+            return img;
         }
     }
 }
