@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Controls;
 using CoralTravelAnalyzer.Classes;
 using CoralTravelAnalyzer.CoralTravelApi;
@@ -46,10 +47,18 @@ namespace CoralTravelAnalyzer
             InitWaitImage();
         }
 
-        private void DebugData()
+        private async void DebugData()
         {
 #if DEBUG
             OptionsResult = Json.DeserializeDataFromFile<ObservableCollection<HotelOptionEntry>>("data.json");
+            WaitImage.ShowAndRotate();
+            WaitImage.SetInfoText("Test");
+            for (var i = 0; i < 10; i++)
+            {
+                await Task.Delay(2000);
+                WaitImage.SetInfoText("Test " + i);
+            }
+            WaitImage.Hide();
 #endif
         }
 
@@ -122,17 +131,20 @@ namespace CoralTravelAnalyzer
             LockUi();
             for (var i = 0; i < shift; i++)
             {
+                var curDay = startDate.AddDays(i);
+                WaitImage.SetInfoText($"Requesting tour options for {curDay:dd.MM.yyyy}...");
                 _priceOptionsApi.SetRequestParameters(hotelEntry.HotelEeId.ToString(), hotelEntry.CountryEeId.ToString(),
-                    areaId, startDate.AddDays(i).ToString("yyyy-MM-dd"), adults, "0", nightsFrom, nightsTo, nightsFrom, "500000", "false", "true", "20", "1",
+                    areaId, curDay.ToString("yyyy-MM-dd"), adults, "0", nightsFrom, nightsTo, nightsFrom, "500000", "false", "true", "20", "1",
                         "1", "Tour");
-                var result = await _priceOptionsApi.GetDataAsync(false, 10);
+                var result = await _priceOptionsApi.GetDataAsync(false, 20);
                 var noFlight = false;
                 if (result == null || result.Result.Empty)
                 {
+                    WaitImage.SetInfoText($"No tour options found for {curDay:dd.MM.yyyy}! Requesting hotel options...");
                     _priceOptionsApi.SetRequestParameters(hotelEntry.HotelEeId.ToString(), hotelEntry.CountryEeId.ToString(),
-                        areaId, startDate.AddDays(i).ToString("yyyy-MM-dd"), adults, "0", nightsFrom, nightsTo, nightsFrom, "500000", "false", "true", "20", "1",
+                        areaId, curDay.ToString("yyyy-MM-dd"), adults, "0", nightsFrom, nightsTo, nightsFrom, "500000", "false", "true", "20", "1",
                         "1", "Hotel");
-                    result = await _priceOptionsApi.GetDataAsync(false, 10);
+                    result = await _priceOptionsApi.GetDataAsync(false, 20);
                     noFlight = true;
                 }
                 var parsedResult = HotelOptionEntry.GenerateFromResultOptions(result?.Result, noFlight);
